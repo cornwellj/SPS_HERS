@@ -1,0 +1,59 @@
+---
+title: "Untitled"
+author: "John Cornwell"
+date: "January 24, 2018"
+output: html_document
+---
+# R SETUP
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+## setup
+x <- c("ggmap", "rgdal", "rgeos", "maptools","plyr", "dplyr", "tidyr", "tmap", "reshape2", "xlsx", "XLConnect", "readxl", "lubridate")
+install.packages(x) # warning: uncommenting this may take a number of minutes
+lapply(x, library, character.only = TRUE) # load the required packages
+
+```
+
+# Import Data
+```{r cars}
+filepath <- "/Users/cornwell/Desktop/SPS"
+
+excel_sheets(paste(filepath, "Preliminary Data/opwr_xenm_2016_web_customers_20170209.xlsx", sep = "/"))
+group1prelim <- read_excel(paste(filepath, "Preliminary Data/NM Group 1 Usage.xlsx", sep = "/"), sheet = "Sheet1")
+group2prelim <- read_excel(paste(filepath, "Preliminary Data/NM Group 2 Usage Part 1.xlsx", sep = "/"), sheet = "Sheet1")
+group2prelim2 <- read_excel(paste(filepath, "Preliminary Data/NM Group 2 Usage Part 2.xlsx", sep = "/"), sheet = "Sheet1")
+groupwebprelim <- read_excel(paste(filepath, "Preliminary Data/opwr_xenm_2016_web_customers_20170209.xlsx", sep = "/"), sheet = "Sheet1")
+groupfinal <- read_excel(paste(filepath, "Final Data (OPower)/Opower Full 2017 Participation_20180117.xlsx", sep = "/"), sheet = "Sheet1")
+usage <- read.delim(paste(filepath, "M&V Evaluator_All_Residential_Usage_2016_2017.txt", sep = "/"), stringsAsFactors = F)
+```
+
+# Examine raw Data
+```{r cars}
+##usage ad
+boxplot(usage$totalConsumption)
+hist(usage$totalConsumption)
+hist(usage$totalConsumption, right = F)
+summary(usage$totalConsumption)
+sum(is.na(usage$totalConsumption))
+sum(usage$totalConsumption == 0)
+sum(usage$totalConsumption < 0)
+```
+
+# Tidy Data
+```{r cars}
+# Start with usage data
+usage$ITEM_PERIOD_START_DT <- mdy(usage$ITEM_PERIOD_START_DT)
+usage$Item.Dt <- mdy(usage$Item.Dt)
+
+```
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
